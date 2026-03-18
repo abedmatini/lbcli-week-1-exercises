@@ -175,7 +175,7 @@ check_cmd "Getting address info"
 
 # STUDENT TASK: Extract the internal key (the x-only pubkey) from the descriptor
 # WRITE YOUR SOLUTION BELOW:
-INTERNAL_KEY=$(echo "$ADDR_INFO" | jq -r '.pubkeys[0]')
+INTERNAL_KEY=$(echo "$ADDR_INFO" | jq -r '.desc' | cut -d'(' -f2 | cut -d'#' -f1)
 check_cmd "Extracting key from descriptor"
 INTERNAL_KEY=$(trim "$INTERNAL_KEY")
 
@@ -196,7 +196,7 @@ echo "Taproot treasure map: $TAPROOT_DESCRIPTOR"
 # WRITE YOUR SOLUTION BELOW:
 DERIVED_ADDR_RAW=$(bitcoin-cli -regtest deriveaddresses "$TAPROOT_DESCRIPTOR")
 check_cmd "Address derivation"
-DERIVED_ADDR=$(echo "$DERIVED_ADDR_RAW" | tr -d '[]" \n\t')
+DERIVED_ADDR=$(echo "$DERIVED_ADDR_RAW" | jq -r '.[0]')
 echo "Derived quantum vault address: $DERIVED_ADDR"
 
 # Verify the addresses match
